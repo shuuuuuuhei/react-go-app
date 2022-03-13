@@ -1,0 +1,38 @@
+version: '3.8'
+services: 
+    db:
+        build: 
+            context: .
+            dockerfile: database/Dockerfile
+        ports: 
+            - "5432:5432"
+        environment: 
+            - POSTGRES_USER=kamakurashuuhei
+            - POSTGRES_PASSWORD=1
+            - POSTGRES_DB=go_movies
+            - PGDATA:/var/lib/postgresql/data/pgdata
+        volumes:
+            - ./database:/var/lib/postgresql/data/pgdata
+    client:
+        build: 
+            context: .
+            dockerfile: ./client/Dockerfile
+        volumes: 
+            - ./client:/var/lib/client
+        command: sh -c "cd /var/lib/client && PORT=3000 npm start"
+        ports: 
+            - 3000:3000
+        stdin_open: true
+    server:
+        build:
+            context: .
+            dockerfile: ./server/Dockerfile
+            target: dev
+        tty: true
+        stdin_open: true
+        volumes: 
+            - ./server:/var/lib/server
+        ports: 
+            - "8080:8080"
+        depends_on: 
+            - db
