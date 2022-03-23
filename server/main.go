@@ -1,13 +1,13 @@
 package main
 
 import (
-	"net/http"
+	"github.com/react-go-app/backend/infrastructure"
 	"fmt"
+	"net/http"
 )
 
 func main() {
-	http.HandleFunc("/", echoHello)
-	http.ListenAndServe(":4000", nil)
+	infrastructure.Init()
 }
 
 func echoHello(w http.ResponseWriter, r *http.Request) {
